@@ -30,7 +30,7 @@ void Client:: setPhoneNumber(string number){
 }
 
 void Client:: setAccount(BankAccount& account){
-    this-> account = &account;
+    this-> account = new BankAccount(account);
 }
 
 //Overload the input operator
@@ -70,4 +70,8 @@ bool Client:: checkValidInput(string input, char inputType){
         regex match("(01)(1|2|0|5)[0-9]{8}");
         return regex_match(input, match);
     }
+}
+
+Client:: ~Client(){
+    delete account;
 }

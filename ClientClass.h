@@ -29,5 +29,8 @@ public:
 
     //Overload input operator
     friend istream& operator>> (istream&, Client&);
+
+    //destructor
+    ~Client();
 };
 #endif //BANK_CLIENTCLASS_H
