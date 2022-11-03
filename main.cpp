@@ -1,9 +1,10 @@
 #include "BankAccount.h"
 #include "SavingsBankAccount.h"
+#include "ClientClass.h"
 
 int main() {
-    //Make sure the bankingApplication operates as in requested in the assignment
-    //Why does this code cout the same account id for different objects??
+//    //Make sure the bankingApplication operates as in requested in the assignment
+//    //Why does this code cout the same account id for different objects??
     BankAccount x;
     cout << x.getAccountID() << endl;
     SavingsBankAccount y(1005);
@@ -14,5 +15,11 @@ int main() {
     y.deposit(49);
     y.withdraw(1199);
     y.withdraw(1);
+
+    //Client Class
+    Client c;
+    cin >> c;
+//    c.setAccount(x);
+
     return 0;
 }
