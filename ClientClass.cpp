@@ -32,7 +32,12 @@ void Client:: setPhoneNumber(string number){
 void Client:: setAccount(BankAccount& account){
     this-> account = new BankAccount(account);
 }
-
+ostream& operator<< (ostream& out, Client& client){
+    out << "Name : " << client.name << endl;
+    out << "Address: " << client.address << endl;
+    out << "Phone Number: " << client.phoneNumber;
+    return out;
+}
 //Overload the input operator
 istream& operator>> (istream& in, Client& client){
     cout << "Hello, Please Enter The Information Below: " << endl;

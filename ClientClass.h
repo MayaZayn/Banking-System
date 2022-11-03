@@ -29,6 +29,7 @@ public:
 
     //Overload input operator
     friend istream& operator>> (istream&, Client&);
+    friend ostream& operator<< (ostream&, Client&);
 
     //destructor
     ~Client();
