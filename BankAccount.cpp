@@ -1,6 +1,6 @@
-#include "BankAccount.h"
+#include "BankingSystem.h"
 
-BankAccount::BankAccount(double amountOfMoney) : balance(amountOfMoney), accountID(generateAccountID()) {}
+BankAccount::BankAccount(double amountOfMoney) : balance(validateMoney(amountOfMoney)), accountID(generateAccountID()) {}
 
 string BankAccount::getAccountID() {
     return accountID;
@@ -10,17 +10,27 @@ double BankAccount::getBalance() {
     return balance;
 }
 
+Client BankAccount::getClient() {
+    return (*client);
+}
+
 void BankAccount::setAccountID(string accountID) {
     this->accountID = accountID;
 }
 
 void BankAccount::setBalance(double balance) {
-    this->balance = balance;
+    this->balance = validateMoney(balance);
+}
+
+void BankAccount::setClient(Client client) {
+    this->client = new Client;
+    *(this->client) = client;
 }
 
 void BankAccount::withdraw(double moneyToWithdraw) {
-    if (balanceIsSufficient(moneyToWithdraw)) {
-        balance -= moneyToWithdraw;
+    double tmpMoneyToWithdraw = validateMoney(moneyToWithdraw);
+    if (balanceIsSufficient(tmpMoneyToWithdraw)) {
+        balance -= tmpMoneyToWithdraw;
         cout << "New Balance: " << balance << endl;
     }
     else
@@ -28,12 +38,13 @@ void BankAccount::withdraw(double moneyToWithdraw) {
 }
 
 void BankAccount::deposit(double moneyToDeposit) {
-    balance += moneyToDeposit;
+    double tmpMoneyToDeposit = validateMoney(moneyToDeposit);
+    balance += tmpMoneyToDeposit;
     cout << "Money Deposited Successfully!\n";
     cout << "New Balance: " << balance << endl;
 }
 
-//While running in BankingApplication claas it should be checked whether the id generated exists or not
+//While running in BankingApplication class it should be checked whether the id generated exists or not
 string BankAccount::generateAccountID() {
     srand(time(nullptr));
     rand() % (1000000000 - 100000000) + 100000000;
@@ -49,3 +60,41 @@ bool BankAccount::balanceIsSufficient(double moneyToWithdraw) {
     }
     return false;
 }
+
+double BankAccount::validateMoney(double balance) {
+    string tmpBalance = to_string(balance);
+    bool valid = true;
+    for (char & digit : tmpBalance) {
+        if (!isdigit(digit) && digit != '.') {
+            valid = false;
+            break;
+        }
+    }
+    while (!valid) {
+        cout << "Please make sure to enter only numbers!\n";
+        valid = true;
+        cin >> tmpBalance;
+        for (char & digit : tmpBalance) {
+            if (!isdigit(digit) && digit != '.') {
+                valid = false;
+                break;
+            }
+        }
+    }
+    return stod(tmpBalance);
+}
+
+istream& operator>>(istream &in, BankAccount &account) {
+    cout << "Please enter an account ID:\n";
+    string id; cin >> id;
+    account.setAccountID(id);
+    cout << "Please enter the balance:\n";
+    double balance; cin >> balance;
+    account.setBalance(balance);
+    return in;
+}
+
+BankAccount::~BankAccount() {
+    delete client;
+}
+

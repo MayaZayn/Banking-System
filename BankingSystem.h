@@ -42,18 +42,18 @@ public:
 
     //Overload operators >> & <<
     friend istream& operator>> (istream&, BankAccount&);
-    friend ostream& operator<< (ostream&, BankAccount&);
+//    friend ostream& operator<< (ostream&, BankAccount&);
 
     //Destructor
-    //~BankAccount() { delete client; }
+    ~BankAccount();
 };
 
 class SavingsBankAccount : public BankAccount {
 private:
     double minimumBalance;
 public:
-    //Shall there be a default constructor???
-    //Constructor
+    //Constructors
+    explicit SavingsBankAccount();
     explicit SavingsBankAccount(double balance);
 
     //Setter and Getter
@@ -87,7 +87,7 @@ public:
 
     //Overload input and output operators
     friend istream& operator>> (istream&, Client&);
-    friend ostream& operator<< (ostream&, Client&);
+//    friend ostream& operator<< (ostream&, const Client&);
 
     //destructor
     ~Client();

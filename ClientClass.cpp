@@ -1,4 +1,4 @@
-#include "ClientClass.h"
+#include "BankingSystem.h"
 
 /***Setters and Getters***/
 string Client::getName(){
@@ -13,8 +13,8 @@ string Client::getPhoneNumber(){
     return phoneNumber;
 }
 
-BankAccount* Client::getAccount() {
-    return account;
+BankAccount Client::getAccount() {
+    return (*account);
 }
 
 void Client:: setName(string name){
@@ -30,14 +30,10 @@ void Client:: setPhoneNumber(string number){
 }
 
 void Client:: setAccount(BankAccount& account){
-    this-> account = new BankAccount(account);
+    this-> account = new BankAccount;
+    *(this->account) = account;
 }
-ostream& operator<< (ostream& out, Client& client){
-    out << "Name : " << client.name << endl;
-    out << "Address: " << client.address << endl;
-    out << "Phone Number: " << client.phoneNumber;
-    return out;
-}
+
 //Overload the input operator
 istream& operator>> (istream& in, Client& client){
     cout << "Hello, Please Enter The Information Below: " << endl;
@@ -71,7 +67,7 @@ bool Client:: checkValidInput(string input, char inputType){
     if (inputType == 'n'){
         regex match("[aA-zZ' ']*");
         return regex_match(input,match);
-    }else {
+    } else {
         regex match("(01)(1|2|0|5)[0-9]{8}");
         return regex_match(input, match);
     }
