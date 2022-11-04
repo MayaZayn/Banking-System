@@ -40,9 +40,8 @@ public:
     bool balanceIsSufficient(double);
     double validateMoney(double);
 
-    //Overload operators >> & <<
+    //Overload operator >>
     friend istream& operator>> (istream&, BankAccount&);
-//    friend ostream& operator<< (ostream&, BankAccount&);
 
     //Destructor
     ~BankAccount();
@@ -85,9 +84,8 @@ public:
     void setPhoneNumber(string);
     void setAccount(BankAccount&);
 
-    //Overload input and output operators
+    //Overload input operator
     friend istream& operator>> (istream&, Client&);
-//    friend ostream& operator<< (ostream&, const Client&);
 
     //destructor
     ~Client();

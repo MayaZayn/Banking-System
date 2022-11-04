@@ -3,7 +3,7 @@
 BankAccount::BankAccount(double amountOfMoney) : balance(validateMoney(amountOfMoney)), accountID(generateAccountID()) {}
 
 string BankAccount::getAccountID() {
-    return accountID;
+    return this->accountID;
 }
 
 double BankAccount::getBalance() {
@@ -95,6 +95,8 @@ istream& operator>>(istream &in, BankAccount &account) {
 }
 
 BankAccount::~BankAccount() {
+    //There is a memory leak here
+    client = nullptr;
     delete client;
 }
 

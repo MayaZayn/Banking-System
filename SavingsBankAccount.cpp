@@ -10,7 +10,7 @@ SavingsBankAccount::SavingsBankAccount(double balance) : minimumBalance(1000) {
         cin >> tmpBalance;
     }
     this->setBalance(tmpBalance);
-    cout << "Your new Savings Account has been created with Balance: " << this->getBalance() << endl;
+    cout << "Your new Savings Account has been created with balance: " << this->getBalance() << endl;
     this->setAccountID(this->generateAccountID());
 }
 
