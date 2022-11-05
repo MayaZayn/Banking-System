@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.22)
-project(Bank)
+project(Banking_System)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Bank main.cpp BankAccount.cpp BankAccount.h SavingsBankAccount.cpp SavingsBankAccount.h)
+include_directories(.)
+
+add_executable(Banking_System
+        BankAccount.cpp
+        BankingApplication.cpp
+        BankingSystem.h
+        ClientClass.cpp
+        main.cpp
+        SavingsBankAccount.cpp
+        sqlite/sqlite3.c
+        sqlite/sqlite3.h)
