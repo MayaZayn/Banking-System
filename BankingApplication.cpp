@@ -1,5 +1,18 @@
 #include "BankingSystem.h"
 
+static bool idExists = false;
+
+static int CheckIfIdExsits(void *NotUsed, int argc, char **argv, char **azColName) {
+    if(strcmp(argv[0] , "0") == 0)
+    {
+        idExists = false;
+    }
+    else
+    {
+        idExists = true;
+    }
+    return 0;
+}
 
 void BankingApplication::displayMenu() {
     int choice;
@@ -51,21 +64,37 @@ void BankingApplication::createAccount() {
         cout << "Please Enter the Starting Balance =========> ";
         cin >> StartingBalance;
         account.setBalance(StartingBalance);
+        string id = account.generateAccountID();
+        // check if id exists in database
+        string sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "';";
+        rc = sqlite3_exec(db, sl.c_str(), CheckIfIdExsits, (void *) data, &zErrMsg);
+        while(idExists)
+        {
+            id = account.generateAccountID();
+            // check if id exists in database
+            sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "';";
+            rc = sqlite3_exec(db, sl.c_str(), CheckIfIdExsits, (void *) data, &zErrMsg);
+        }
+        account.setAccountID(id);
+        if (rc)
+            cout << "SQL error: " << zErrMsg << endl;
+        else
+            cout << "Operation done successfully" << endl;
         client.setAccount(account);
 
         // ------------------ Sql ------------------
         //insert Account and client into the database
         string Insertquery =
-                "INSERT INTO MainTable (accountID, accountType, accountBalance, clientName, clientAddress, clientPhoneNumber) VALUES ('" +
+                "INSERT INTO MainTable (accountID, accountType, balance, name, address, phoneNumber) VALUES ('" +
                 client.getAccount().getAccountID() + "', '" + "Basic" + "', '" +
                 to_string(client.getAccount().getBalance()) + "', '" + client.getName() + "', '" + client.getAddress() +
                 "', '" + client.getPhoneNumber() + "');";
         sql = Insertquery.c_str();
-        rc = sqlite3_exec(db, sql, Printcallback, 0, &zErrMsg);
+        rc = sqlite3_exec(db, sql, SelectCallBack, 0, &zErrMsg);
         if (rc != SQLITE_OK)
             cout << "SQL error: " << zErrMsg << endl;
         else
-            cout << "Records created successfully" << endl;
+            cout << "An " << "Basic" << " account was created with ID FCAI-" << client.getAccount().getAccountID() << " and Starting Balance "<< client.getAccount().getBalance() <<" L.E." << endl;
         sqlite3_close(db);
     }
     else if(BankAccountType == 2) {
@@ -87,20 +116,33 @@ void BankingApplication::createAccount() {
         cin >> StartingBalance;
         SavingsBankAccount account(StartingBalance);
         client.setAccount(account);
-
+        string id = account.generateAccountID();
+        // check if id exists in database
+        string sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "';";
+        rc = sqlite3_exec(db, sl.c_str(), CheckIfIdExsits, (void *) data, &zErrMsg);
+        while(idExists)
+        {
+            id = account.generateAccountID();
+            // check if id exists in database
+            sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "';";
+            rc = sqlite3_exec(db, sl.c_str(), CheckIfIdExsits, (void *) data, &zErrMsg);
+        }
+        account.setAccountID(id);
         // ------------------ Sql ------------------
         //insert Account and client into the database
         string Insertquery =
-                "INSERT INTO MainTable (accountID, accountType, accountBalance, clientName, clientAddress, clientPhoneNumber) VALUES ('" +
+                "INSERT INTO MainTable (accountID, accountType, balance, name, address, phoneNumber) VALUES ('" +
                 client.getAccount().getAccountID() + "', '" + "Saving" + "', '" +
                 to_string(client.getAccount().getBalance()) + "', '" + client.getName() + "', '" + client.getAddress() +
                 "', '" + client.getPhoneNumber() + "');";
         sql = Insertquery.c_str();
-        rc = sqlite3_exec(db, sql, Printcallback, 0, &zErrMsg);
+        // callbak function
+        rc = sqlite3_exec(db, sql, SelectCallBack, 0, &zErrMsg);
         if (rc != SQLITE_OK)
             cout << "SQL error: " << zErrMsg << endl;
         else
-            cout << "Records created successfully" << endl;
+            string selectquery = "SELECT FROM MainTable;";
+        cout << "An " << "Saving" << " account was created with ID FCAI-" << client.getAccount().getAccountID() << " and Starting Balance "<< client.getAccount().getBalance() <<" L.E." << endl;
         sqlite3_close(db);
     }
 }

@@ -4,3 +4,4 @@ cmake-build-debug/*
 .idea/*
 CMakeLists.txt
 .DS_Store
+CMakeLists.txt

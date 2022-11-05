@@ -104,7 +104,7 @@ public:
 
 // Sql Functions
 // callback function for sql
-static int Printcallback(void *NotUsed, int argc, char **argv, char **azColName) {
+static int SelectCallBack(void *NotUsed, int argc, char **argv, char **azColName) {
     int i;
     for(i = 0; i < argc; i++) {
         cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
@@ -113,16 +113,9 @@ static int Printcallback(void *NotUsed, int argc, char **argv, char **azColName)
     return 0;
 }
 
-static int CheckIfIdExsits(void *NotUsed, int argc, char **argv, char **azColName, bool& found) {
-    if(strcmp(argv[0] , "0") == 0)
-    {
-        found = false;
-    }
-    else
-    {
-        found = true;
-    }
-}
+
+// callback function for sql
+
 //
 //void SelectFromTable(string SelectQuery)
 //{
