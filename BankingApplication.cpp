@@ -14,15 +14,14 @@ static int getClientCallBack(void *NotUsed, int argc, char **argv, char **azColN
     {
         tempAccount.setAccountID(argv[4]);
         tempAccount.setBalance(atof(argv[5]));
-        tempAccount.setClient(tempClient);
         tempClient.setAccount(tempAccount);
     }
     else
     {
         tempSavingsAccount.setAccountID(argv[4]);
         tempSavingsAccount.setBalance(atof(argv[5]));
-        tempSavingsAccount.setClient(tempClient);
         tempClient.setAccount(tempSavingsAccount);
+        tempSavingsAccount.setClient(tempClient);
     }
     return 0;
 
@@ -231,7 +230,8 @@ void BankingApplication::withdraw() {
     cout << "Please Enter the Amount you want to withdraw =========> ";
     int amount;
     cin >> amount;
-    tempClient.getAccount().withdraw(amount);
+    auto account = tempClient.getAccount();
+    account.withdraw(amount);
 
     // ------------------ Sql ------------------
         string updatequery = "UPDATE MainTable SET balance = " + to_string(tempClient.getAccount().getBalance()) + " WHERE accountID = " + id + ";";
@@ -272,8 +272,8 @@ void BankingApplication::Deposit() {
     cout << "Please Enter the Amount you want to Deposit =========> ";
     int amount;
     cin >> amount;
-    tempClient.getAccount().deposit(amount);
-
+    auto account = tempClient.getAccount();
+    account.deposit(amount);
     // ------------------ Sql ------------------
         string updatequery = "UPDATE MainTable SET balance = " + to_string(tempClient.getAccount().getBalance()) + " WHERE accountID = " + id + ";";
         rc = sqlite3_exec(db, updatequery.c_str(), SelectCallBack, 0, &zErrMsg);
