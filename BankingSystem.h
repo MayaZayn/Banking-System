@@ -93,12 +93,14 @@ public:
 };
 
 class BankingApplication {
-private:
-    int choice;
 public:
     // Main Functions
-    void displayMenu();
+    int displayMenu();
     void createAccount();
+    void displayAccounts();
+    void withdraw();
+    void Deposit();
+    void run();
 };
 
 
@@ -106,45 +108,11 @@ public:
 // callback function for sql
 static int SelectCallBack(void *NotUsed, int argc, char **argv, char **azColName) {
     int i;
-    for(i = 0; i < argc; i++) {
-        cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
-    }
+    cout << "------------------" << argv[1] << "------------------" << endl;
+    cout << "Address: " << argv[2] << " ," << "Phone Number: " << argv[3] << endl;
+    cout << "Account ID: " << argv[4] << " (" << argv[6] << ")" << endl;
+    cout << "Balance:" << argv[5] << endl;
     cout << endl;
     return 0;
 }
-
-
-// callback function for sql
-
-//
-//void SelectFromTable(string SelectQuery)
-//{
-//    sqlite3 *db;
-//    char *zErrMsg = 0;
-//    int rc;
-//    const char *sql;
-//    const char* data = "Callback function called";
-//
-//    /* Open database */
-//    rc = sqlite3_open("BankingSystem.db", &db);
-//    if (rc)
-//        cout << "Can't open database: " << sqlite3_errmsg(db) << endl;
-//    else
-//        cout << "Opened database successfully" << endl;
-//
-//    /* Create SQL statement */
-//    sql = SelectQuery.c_str();
-//
-//    /* Execute SQL statement */
-//    rc = sqlite3_exec(db, sql, callback, (void*)data, &zErrMsg);
-//    if (rc != SQLITE_OK) {
-//        cout << "SQL error: " << zErrMsg << endl;
-//        sqlite3_free(zErrMsg);
-//    } else {
-//        cout << "Operation done successfully" << endl;
-//    }
-//    sqlite3_close(db);
-//}
-
-
 #endif //MAIN_CPP_BANKINGSYSTEM_H

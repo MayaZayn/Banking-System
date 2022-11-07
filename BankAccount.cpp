@@ -30,7 +30,8 @@ void BankAccount::setClient(Client client) {
 void BankAccount::withdraw(double moneyToWithdraw) {
     double tmpMoneyToWithdraw = validateMoney(moneyToWithdraw);
     if (balanceIsSufficient(tmpMoneyToWithdraw)) {
-        balance -= tmpMoneyToWithdraw;
+        this -> balance -= tmpMoneyToWithdraw;
+        cout << "Account ID: " << accountID << endl;
         cout << "New Balance: " << balance << endl;
     }
     else

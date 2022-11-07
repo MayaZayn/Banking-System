@@ -1,8 +1,34 @@
 #include "BankingSystem.h"
 
 static bool idExists = false;
+static Client tempClient;
+static BankAccount tempAccount;
+static SavingsBankAccount tempSavingsAccount;
 
+static int getClientCallBack(void *NotUsed, int argc, char **argv, char **azColName)
+{
+    tempClient.setName(argv[1]);
+    tempClient.setAddress(argv[2]);
+    tempClient.setPhoneNumber(argv[3]);
+    if(strcmp(argv[6],"Basic") == 0)
+    {
+        tempAccount.setAccountID(argv[4]);
+        tempAccount.setBalance(atof(argv[5]));
+        tempAccount.setClient(tempClient);
+        tempClient.setAccount(tempAccount);
+    }
+    else
+    {
+        tempSavingsAccount.setAccountID(argv[4]);
+        tempSavingsAccount.setBalance(atof(argv[5]));
+        tempSavingsAccount.setClient(tempClient);
+        tempClient.setAccount(tempSavingsAccount);
+    }
+    return 0;
+
+}
 static int CheckIfIdExsits(void *NotUsed, int argc, char **argv, char **azColName) {
+    // check if count is 0
     if(strcmp(argv[0] , "0") == 0)
     {
         idExists = false;
@@ -14,7 +40,8 @@ static int CheckIfIdExsits(void *NotUsed, int argc, char **argv, char **azColNam
     return 0;
 }
 
-void BankingApplication::displayMenu() {
+
+int BankingApplication::displayMenu() {
     int choice;
     cout << "Welcome to FCAI Banking Application" << endl;
     cout << "Please choose one of the following options:" << endl;
@@ -22,13 +49,14 @@ void BankingApplication::displayMenu() {
     cout << "2. List Clients and Accounts" << endl;
     cout << "3. Withdraw Money" << endl;
     cout << "4. Deposit Money" << endl;
+    cout << "5. Exit" << endl;
     cout << "Please Enter Choice =========> ";
     cin >> choice;
-    while (choice < 1 || choice > 5) {
+    while (choice < 1 || choice > 6) {
         cout << "Please enter a valid choice!" << endl;
         cin >> choice;
     }
-    this->choice = choice;
+    return choice;
 }
 
 void BankingApplication::createAccount() {
@@ -81,6 +109,7 @@ void BankingApplication::createAccount() {
         else
             cout << "Operation done successfully" << endl;
         client.setAccount(account);
+        account.setClient(client);
 
         // ------------------ Sql ------------------
         //insert Account and client into the database
@@ -116,6 +145,7 @@ void BankingApplication::createAccount() {
         cin >> StartingBalance;
         SavingsBankAccount account(StartingBalance);
         client.setAccount(account);
+        account.setClient(client);
         string id = account.generateAccountID();
         // check if id exists in database
         string sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "';";
@@ -141,60 +171,139 @@ void BankingApplication::createAccount() {
         if (rc != SQLITE_OK)
             cout << "SQL error: " << zErrMsg << endl;
         else
-            string selectquery = "SELECT FROM MainTable;";
-        cout << "An " << "Saving" << " account was created with ID FCAI-" << client.getAccount().getAccountID() << " and Starting Balance "<< client.getAccount().getBalance() <<" L.E." << endl;
+            cout << "An " << "Saving" << " account was created with ID FCAI-" << client.getAccount().getAccountID() << " and Starting Balance "<< client.getAccount().getBalance() <<" L.E." << endl;
         sqlite3_close(db);
     }
 }
 
+void BankingApplication::displayAccounts() {
+    // ------------------ Sql ------------------
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
+    const char *sql;
+    const char *data = "Callback function called";
+    rc = sqlite3_open("BankingSystem.db", &db);
+    if (rc)
+        cout << "Can't open database: " << sqlite3_errmsg(db) << endl;
+    //---------------------------------------------------------------------------------
+    string selectquery = "SELECT * FROM MainTable;";
+    sql = selectquery.c_str();
+    cout << "Clients and Accounts in the bank are: " << endl << endl;
+    rc = sqlite3_exec(db, sql, SelectCallBack, 0, &zErrMsg);
+    if (rc != SQLITE_OK)
+        cout << "SQL error: " << zErrMsg << endl;
+    else
+        cout << "Operation done successfully" << endl;
+    sqlite3_close(db);
+}
 
-//
-//    cout << "Welcome to the Banking Application!" << endl;
-//    cout << "Please enter your name: " << endl;
-//    cin.ignore();
-//    getline(cin, name);
-//    while (!checkValidInput(name, 'n')) {
-//        cout << "Please enter a valid Name!" << endl;
-//        getline(cin, name);
-//    }
-//    cout << "Hello " << name << "!" << endl;
-//    cout << "Please enter your address: " << endl;
-//    getline(cin, address);
-//    cout << "Please enter your phone number: " << endl;
-//    getline(cin, phoneNumber);
-//    while (!checkValidInput(phoneNumber, 'p')) {
-//        cout << "Please enter a valid Phone number!" << endl;
-//        getline(cin, phoneNumber);
-//    }
-//    cout << "Please enter the amount of money you want to deposit: " << endl;
-//    cin >> amountOfMoney;
-//    while (!checkValidInput(to_string(amountOfMoney), 'm')) {
-//        cout << "Please enter a valid amount of money!" << endl;
-//        cin >> amountOfMoney;
-//    }
-//    BankAccount account(amountOfMoney);
-//    Client client;
-//    client.setName(name);
-//    client.setAddress(address);
-//    client.setPhoneNumber(phoneNumber);
-//    client.setAccount(account);
-//    account.setClient(client);
-//    cout << "Your account has been created successfully!" << endl;
-//    cout << "Your account ID is: " << account.getAccountID() << endl;
-//    cout << "Your balance is: " << account.getBalance() << endl;
-//    cout << "Please enter the amount of money you want to withdraw: " << endl;
-//    cin >> amountOfMoney;
-//    while (!checkValidInput(to_string(amountOfMoney), 'm')) {
-//        cout << "Please enter a valid amount of money!" << endl;
-//        cin >> amountOfMoney;
-//    }
-//    account.withdraw(amountOfMoney);
-//    cout << "Your balance is: " << account.getBalance() << endl;
-//    cout << "Please enter the amount of money you want to deposit: " << endl;
-//    cin >> amountOfMoney;
-//    while (!checkValidInput(to_string(amountOfMoney), 'm')) {
-//        cout << "Please enter a valid amount of money!" << endl;
-//        cin >> amountOfMoney;
-//    }
-//    account.deposit(amountOfMoney);
-//    cout << "Your balance is: " << account.getBalance() << endl;
+void BankingApplication::withdraw() {
+    // ------------------ Sql ------------------
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
+    const char *data = "Callback function called";
+    rc = sqlite3_open("BankingSystem.db", &db);
+    if (rc)
+        cout << "Can't open database: " << sqlite3_errmsg(db) << endl;
+    //---------------------------------------------------------------------------------
+    string id;
+    cout << "Please Enter the Account ID =========> ";
+    cin >> id;
+
+    //CheckIfIdExsits
+    string sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "'";
+    rc = sqlite3_exec(db, sl.c_str(), CheckIfIdExsits, 0, &zErrMsg);
+    if(!idExists)
+    {
+        cout << "Id is Not Found" << endl;
+        return;
+    }
+
+    string sql = "SELECT * FROM MainTable WHERE accountID ='" +id +"'";
+    rc = sqlite3_exec(db, sql.c_str(), getClientCallBack, 0, &zErrMsg);
+    if (rc != SQLITE_OK)
+        cout << "Id is Not Found" << endl;
+    else
+        cout << "Operation done successfully" << endl;
+
+    cout << "Please Enter the Amount you want to withdraw =========> ";
+    int amount;
+    cin >> amount;
+    tempClient.getAccount().withdraw(amount);
+
+    // ------------------ Sql ------------------
+        string updatequery = "UPDATE MainTable SET balance = " + to_string(tempClient.getAccount().getBalance()) + " WHERE accountID = " + id + ";";
+        rc = sqlite3_exec(db, updatequery.c_str(), SelectCallBack, 0, &zErrMsg);
+        if (rc != SQLITE_OK)
+            cout << "SQL error: " << zErrMsg << endl;
+        sqlite3_close(db);
+}
+void BankingApplication::Deposit() {
+    // ------------------ Sql ------------------
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
+    const char *data = "Callback function called";
+    rc = sqlite3_open("BankingSystem.db", &db);
+    if (rc)
+        cout << "Can't open database: " << sqlite3_errmsg(db) << endl;
+    //---------------------------------------------------------------------------------
+    string id;
+    cout << "Please Enter the Account ID =========> ";
+    cin >> id;
+
+    //CheckIfIdExsits
+    string sl = "SELECT Count(*) As n FROM MainTable where accountID = '" + id + "'";
+    rc = sqlite3_exec(db, sl.c_str(), CheckIfIdExsits, 0, &zErrMsg);
+    if(!idExists)
+    {
+        cout << "Id is Not Found" << endl;
+        return;
+    }
+    string sql = "SELECT * FROM MainTable WHERE accountID ='" +id +"'";
+    rc = sqlite3_exec(db, sql.c_str(), getClientCallBack, 0, &zErrMsg);
+    if (rc != SQLITE_OK)
+        cout << "SQL error: " << zErrMsg << endl;
+    else
+        cout << "Operation done successfully" << endl;
+
+    cout << "Please Enter the Amount you want to Deposit =========> ";
+    int amount;
+    cin >> amount;
+    tempClient.getAccount().deposit(amount);
+
+    // ------------------ Sql ------------------
+        string updatequery = "UPDATE MainTable SET balance = " + to_string(tempClient.getAccount().getBalance()) + " WHERE accountID = " + id + ";";
+        rc = sqlite3_exec(db, updatequery.c_str(), SelectCallBack, 0, &zErrMsg);
+        if (rc != SQLITE_OK)
+            cout << "SQL error: " << zErrMsg << endl;
+        sqlite3_close(db);
+}
+
+void BankingApplication::run() {
+    int choice;
+    do {
+        choice = displayMenu();
+        switch (choice) {
+            case 1:
+                createAccount();
+                break;
+            case 2:
+                displayAccounts();
+                break;
+            case 3:
+                withdraw();
+                break;
+            case 4:
+                Deposit();
+                break;
+            case 5:
+                cout << "Thank you for using our system" << endl;
+                break;
+            default:
+                cout << "Invalid choice" << endl;
+        }
+    } while (choice != 5);
+}

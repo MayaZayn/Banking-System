@@ -40,23 +40,22 @@ istream& operator>> (istream& in, Client& client){
 
     // Get user's name
     cout << "Enter your name :" << endl;
-    cin.ignore();
-    getline(in, client.name);
+    getline(in >> ws, client.name);
     while (!client.checkValidInput(client.name, 'n')){
         cout << "Please enter a valid Name!" << endl;
-        getline(in, client.name);
+        getline(in >> ws, client.name);
     }
 
     // Get user's address
     cout << "Enter your address :" << endl;
-    getline(in, client.address); // to validate somehow
+    getline(in >> ws, client.address); // to validate somehow
 
     // Get user's phone number
     cout << "Enter your phone number :" << endl;
-    getline(in, client.phoneNumber);
+    getline(in >> ws, client.phoneNumber);
     while (!client.checkValidInput(client.phoneNumber, 'p')){
         cout << "Please enter a valid Phone number!" << endl;
-        getline(in, client.phoneNumber);
+        getline(in >> ws, client.phoneNumber);
     }
 
     return in;
