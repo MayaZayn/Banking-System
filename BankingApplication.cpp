@@ -171,6 +171,7 @@ void BankingApplication::createAccount() {
             cout << "SQL error: " << zErrMsg << endl;
         else
             cout << "An " << "Saving" << " account was created with ID FCAI-" << client.getAccount().getAccountID() << " and Starting Balance "<< client.getAccount().getBalance() <<" L.E." << endl;
+            cout << "------------------------------------------" << endl;
         sqlite3_close(db);
     }
 }
@@ -234,7 +235,7 @@ void BankingApplication::withdraw() {
     account.withdraw(amount);
 
     // ------------------ Sql ------------------
-        string updatequery = "UPDATE MainTable SET balance = " + to_string(tempClient.getAccount().getBalance()) + " WHERE accountID = " + id + ";";
+        string updatequery = "UPDATE MainTable SET balance = " + to_string(account.getBalance()) + " WHERE accountID = '" + id + "'";
         rc = sqlite3_exec(db, updatequery.c_str(), SelectCallBack, 0, &zErrMsg);
         if (rc != SQLITE_OK)
             cout << "SQL error: " << zErrMsg << endl;
@@ -275,7 +276,7 @@ void BankingApplication::Deposit() {
     auto account = tempClient.getAccount();
     account.deposit(amount);
     // ------------------ Sql ------------------
-        string updatequery = "UPDATE MainTable SET balance = " + to_string(tempClient.getAccount().getBalance()) + " WHERE accountID = " + id + ";";
+    string updatequery = "UPDATE MainTable SET balance = " + to_string(account.getBalance()) + " WHERE accountID = '" + id + "'";
         rc = sqlite3_exec(db, updatequery.c_str(), SelectCallBack, 0, &zErrMsg);
         if (rc != SQLITE_OK)
             cout << "SQL error: " << zErrMsg << endl;
@@ -307,3 +308,4 @@ void BankingApplication::run() {
         }
     } while (choice != 5);
 }
+
