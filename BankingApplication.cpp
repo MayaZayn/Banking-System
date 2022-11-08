@@ -301,7 +301,7 @@ void BankingApplication::run() {
                 Deposit();
                 break;
             case 5:
-                cout << "Thank you for using our system" << endl;
+                cout << "Thank you for using our system..GoodBye!" << endl;
                 break;
             default:
                 cout << "Invalid choice" << endl;
