@@ -73,7 +73,6 @@ bool Client:: checkValidInput(string input, char inputType){
 }
 
 Client:: ~Client() {
-    //There is a memory leak here
     account = nullptr;
     delete account;
 }

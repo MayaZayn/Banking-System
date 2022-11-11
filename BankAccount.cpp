@@ -96,7 +96,6 @@ istream& operator>>(istream &in, BankAccount &account) {
 }
 
 BankAccount::~BankAccount() {
-    //There is a memory leak here
     client = nullptr;
     delete client;
 }
