@@ -22,6 +22,8 @@ BankingApplication allows the user (the bank employee) to perform operations on 
      * Create a bank account for a specific client.
      * List all the available bank accounts.
      * For each account, it allows him to display the account details, withdraw money and deposit money 
+ ## The Class Diagram
+<img src="https://user-images.githubusercontent.com/47755776/204836967-400c5a71-2bce-4cfb-9209-5398ecd49ac6.jpg" alt="UML Class Diagram" width="800"/>
 
 ## The Goal of this project is to:
 * Practice Object-Oriented-Programming concepts using C++ (Inheretance - Composition - Encapsulation - Abstraction - etc..) 
