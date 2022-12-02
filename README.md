@@ -19,13 +19,13 @@ This is the main class that runs the application. This class displays the main m
 * This System has a DataBase Written in sqlite3 that stores the clients data and their accounts.
 
 BankingApplication allows the user (the bank employee) to perform operations on a bank account:
-     * Create a bank account for a specific client.
-     * List all the available bank accounts.
-     * For each account, it allows him to display the account details, withdraw money and deposit money 
+* Create a bank account for a specific client.
+* List all the available bank accounts.
+* For each account, it allows him to display the account details, withdraw money and deposit money 
  ## The Class Diagram
 <img src="https://user-images.githubusercontent.com/47755776/204836967-400c5a71-2bce-4cfb-9209-5398ecd49ac6.jpg" alt="UML Class Diagram" width="800"/>
 
 ## The Goal of this project is to:
-* Practice Object-Oriented-Programming concepts using C++ (Inheretance - Composition - Encapsulation - Abstraction - etc..) 
+* Practice Object-Oriented-Programming concepts using C++ (Inheritance - Composition - Encapsulation - Abstraction - etc..) 
 * Practice building systems using OOP modeling and design with C++
 * Practice working in a team and integrating the code together to come up with a final working program
